@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalConnect - World Chat & Community</title>
+    <!-- Tailwind CSS for Modern UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-indigo-600 text-white shadow-lg p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-earth-americas text-2xl animate-spin-slow"></i>
+            <span class="text-xl font-bold tracking-wider">GlobalConnect</span>
+        </div>
+        <!-- User Profile / Login State -->
+        <div id="auth-zone" class="flex items-center space-x-4">
+            <button onclick="toggleAuthModal()" class="bg-white text-indigo-600 px-4 py-2 rounded-full font-semibold hover:bg-indigo-50 transition">
+                <i class="fa-solid fa-user-plus mr-2"></i>Login / Register
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN BODY LAYOUT -->
+    <div class="max-w-7xl mx-auto my-6 px-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- LEFT SIDEBAR: CHAT ROOMS -->
+        <aside class="bg-white rounded-xl shadow-md p-4 lg:col-span-1">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">
+                <i class="fa-solid fa-comments text-indigo-500 mr-2"></i>Chat Rooms
+            </h2>
+            <div class="space-y-2">
+                <button onclick="switchRoom('Global Lounge')" class="w-full text-left p-3 rounded-lg bg-indigo-50 text-indigo-700 font-semibold flex items-center justify-between">
+                    <span>🌍 Global Lounge</span>
+                    <span class="bg-indigo-200 text-indigo-800 text-xs px-2 py-0.5 rounded-full">1.2k Online</span>
+                </button>
+                <button onclick="switchRoom('Europe Hub')" class="w-full text-left p-3 rounded-lg hover:bg-slate-50 text-slate-700 flex items-center justify-between">
+                    <span>🇪🇺 Europe Travelers</span>
+                    <span class="bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full">420</span>
+                </button>
+                <button onclick="switchRoom('Asia Connect')" class="w-full text-left p-3 rounded-lg hover:bg-slate-50 text-slate-700 flex items-center justify-between">
+                    <span>🕌 Middle East & Asia</span>
+                    <span class="bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full">850</span>
+                </button>
+                <button onclick="switchRoom('English Learning')" class="w-full text-left p-3 rounded-lg hover:bg-slate-50 text-slate-700 flex items-center justify-between">
+                    <span>📚 English Practice</span>
+                    <span class="bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full">310</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- CENTER: CHAT BOX -->
+        <main class="bg-white rounded-xl shadow-md p-4 lg:col-span-2 flex flex-col h-[600px]">
+            <!-- Chat Header -->
+            <div class="border-b pb-3 mb-4 flex justify-between items-center">
+                <div>
+                    <h3 id="current-room-title" class="text-xl font-bold text-slate-800">🌍 Global Lounge</h3>
+                    <p class="text-xs text-green-500 font-medium"><i class="fa-solid fa-circle mr-1 text-[10px]"></i> Active chat with people worldwide</p>
+                </div>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <div id="chat-box" class="chat-messages flex-1 overflow-y-auto space-y-4 pr-2 mb-4">
+                <!-- Sample Received Message -->
+                <div class="flex items-start space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm">J</div>
+                    <div class="bg-slate-100 p-3 rounded-r-xl rounded-bl-xl max-w-[75%]">
+                        <p class="text-xs font-bold text-emerald-600">John (London, UK) 🇬🇧</p>
+                        <p class="text-sm text-slate-800 mt-1">Hello everyone! Welcome to the global chat. Where is everyone from?</p>
+                    </div>
+                </div>
+
+                <!-- Sample Sent Message -->
+                <div class="flex items-start space-x-2 justify-end">
+                    <div class="bg-indigo-600 text-white p-3 rounded-l-xl rounded-br-xl max-w-[75%] text-right">
+                        <p class="text-xs font-bold opacity-75">You</p>
+                        <p class="text-sm mt-1">Hey John! Greetings from here. Glad to connect with international friends.</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-indigo-800 text-white flex items-center justify-center font-bold text-sm">Me</div>
+                </div>
+            </div>
+
+            <!-- Message Input Form -->
+            <div class="border-t pt-3">
+                <form id="message-form" onsubmit="sendMessage(event)" class="flex space-x-2">
+                    <input type="text" id="msg-input" placeholder="Type your international message here..." class="flex-1 border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button type="submit" class="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <!-- RIGHT SIDEBAR: ADVERTISEMENTS & SPONSORS (Earning Area) -->
+        <aside class="space-y-6 lg:col-span-1">
+            <!-- Sponsor Slot 1 -->
+            <div class="bg-white rounded-xl shadow-md p-4 text-center border-2 border-dashed border-indigo-300">
+                <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded font-mono uppercase tracking-wider block mb-2 mx-auto w-max">Sponsored Ad</span>
+                <!-- Banner Space -->
+                <div class="bg-gradient-to-br from-amber-100 to-orange-100 h-48 rounded-lg flex flex-col items-center justify-center p-4 cursor-pointer hover:opacity-90 transition">
+                    <i class="fa-solid fa-plane-departure text-3xl text-orange-500 mb-2"></i>
+                    <h4 class="font-bold text-slate-800 text-sm">Europe Tour Package 2026</h4>
+                    <p class="text-xs text-slate-600 mt-1">Affordable flights & premium hotels booking open now.</p>
+                    <span class="mt-3 bg-orange-500 text-white text-xs px-3 py-1 rounded-full font-bold">Book Now</span>
+                </div>
+            </div>
+
+            <!-- Sponsor Slot 2 (Google AdSense Placeholder) -->
+            <div class="bg-white rounded-xl shadow-md p-4 text-center">
+                <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded font-mono uppercase tracking-wider block mb-2 mx-auto w-max">Advertisement</span>
+                <div class="bg-slate-50 border border-slate-200 h-64 rounded-lg flex flex-col items-center justify-center p-2 text-slate-400">
+                    <i class="fa-solid fa-rectangle-ad text-4xl mb-2 text-slate-300"></i>
+                    <p class="text-xs">Google AdSense banner code goes here</p>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- AUTH MODAL (LOGIN/SIGNUP POPUP) -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 relative">
+            <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-slate-800 text-center mb-2">Join GlobalConnect</h3>
+            <p class="text-center text-sm text-slate-500 mb-6">Create an account to chat with people from over 190+ countries.</p>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Your Name</label>
+                    <input type="text" required placeholder="John Doe" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Your Country</label>
+                    <select class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <option>Saudi Arabia 🇸🇦</option>
+                        <option>Pakistan 🇵🇰</option>
+                        <option>United Kingdom 🇬🇧</option>
+                        <option>Germany 🇩🇪</option>
+                        <option>United States 🇺🇸</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-bold hover:bg-indigo-700 transition">
+                    Start Chatting Now
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER WITH AD SLOT -->
+    <footer class="bg-slate-800 text-slate-400 text-center py-6 mt-12 border-t border-slate-700">
+        <p class="text-sm">&copy; 2026 GlobalConnect Network. All rights reserved.</p>
+        <p class="text-xs text-slate-500 mt-1">Monetized securely with premium ad networks.</p>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT -->
+    <script>
+        function toggleAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function switchRoom(roomName) {
+            document.getElementById('current-room-title').innerText = roomName;
+            alert("Switched to room: " + roomName);
+        }
+
+        function sendMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('msg-input');
+            if(!input.value.trim()) return;
+
+            const chatBox = document.getElementById('chat-box');
+            
+            // Append New Message HTML
+            const newMessageHtml = `
+                <div class="flex items-start space-x-2 justify-end">
+                    <div class="bg-indigo-600 text-white p-3 rounded-l-xl rounded-br-xl max-w-[75%] text-right">
+                        <p class="text-xs font-bold opacity-75">You</p>
+                        <p class="text-sm mt-1">${input.value}</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-indigo-800 text-white flex items-center justify-center font-bold text-sm">Me</div>
+                </div>
+            `;
+            chatBox.insertAdjacentHTML('beforeend', newMessageHtml);
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            alert("Login Successful! (Firebase Database can be connected here)");
+            toggleAuthModal();
+        }
+    </script>
+</body>
+</html>
